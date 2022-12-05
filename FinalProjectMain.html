@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://mimicproject.com/libs/nexusUI.js"></script>
+    <script src="https://mimicproject.com/libs/maximilian.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Staatliches" rel="stylesheet" />
+    <link rel="stylesheet" href="styleforFP.css" />
+</head>
+
+<body>
+    <h2>DJ under the stars</h1>
+
+        <canvas id="canvas"></canvas>
+
+        <button id="changeScene" onclick="setVisibility()">next page</button>
+
+        <div>
+            <img hidden="true" class="bilder" id="img1" src="try1.png" alt="testpicture1">
+            <img hidden="true" class="bilder" id="img2" src="try2.png" alt="textpicture2">
+            <img hidden="true" class="bilder" id="San1" src="San1.png" alt="San1">
+            <img hidden="true" class="bilder" id="San2" src="San2.png" alt="San2">
+            <img hidden="true" class="bilder" id="San3" src="San3.png" alt="San3">
+            <img hidden="true" class="bilder" id="D2" src="D2.png" alt="D2">
+            <img hidden="true" class="bilder" id="D3" src="D3.png" alt="D3">
+            <img hidden="true" class="bilder" id="D4" src="D4.png" alt="D4">
+            <img hidden="true" class="bilder" id="C1" src="C1.png" alt="C1">
+            <img hidden="true" class="bilder" id="C2" src="C2.png" alt="C2">
+            <img hidden="true" class="bilder" id="S2-1" src="S2-1.jpg" alt="S2-1">
+            <img hidden="true" class="bilder" id="S2-2" src="S2-2.png" alt="S2-2">
+            <img hidden="true" class="bilder" id="S2-3" src="S2-3.png" alt="S2-3">
+            <img hidden="true" class="bilder" id="S2-4" src="S2-4.png" alt="S2-4">
+            <img hidden="true" class="bilder" id="DJhand" src="DJhand.png" alt="DJhand">
+
+
+
+        </div>
+        <div>
+
+        </div>
+
+        <script type="text/javascript">//script for image
+            //set image element
+            var img1 = document.getElementById("img1");
+            var img2 = document.getElementById("img2");
+            var C1 = document.getElementById("C1");
+            var C2 = document.getElementById("C2");
+            var S24 = document.getElementById("S2-4");
+            var DJhand = document.getElementById("DJhand");
+
+            // Conversation images
+            var scene1Array = [];
+            scene1Array.push({
+                img: document.getElementById("D2"),
+                visible: false,
+                dx: 700,
+                dy: 20,
+                dWidth: 813 / 3,
+                dHeight: 637 / 3
+            });
+
+            scene1Array.push({
+                img: document.getElementById("San1"),
+                visible: false,
+                dx: 150,
+                dy: 50,
+                dWidth: 1145 / 3,
+                dHeight: 771 / 3
+            });
+
+            scene1Array.push({
+                img: document.getElementById("D3"),
+                visible: false,
+                dx: 780,
+                dy: 100,
+                dWidth: 1237 / 3,
+                dHeight: 855 / 3
+            });
+
+            scene1Array.push({
+                img: document.getElementById("San2"),
+                visible: false,
+                dx: 80,
+                dy: 230,
+                dWidth: 1229 / 3,
+                dHeight: 811 / 3
+            });
+
+            scene1Array.push({
+                img: document.getElementById("D4"),
+                visible: false,
+                dx: 750,
+                dy: 320,
+                dWidth: 1102 / 3,
+                dHeight: 940 / 3
+            });
+
+            scene1Array.push({
+                img: document.getElementById("San3"),
+                visible: false,
+                dx: 120,
+                dy: 400,
+                dWidth: 1397 / 3,
+                dHeight: 779 / 3
+            });
+
+            var scene2Array = [];
+            scene2Array.push({
+                img: document.getElementById("S2-1"),
+                visible: false,
+                dx: 120,
+                dy: 20,
+                dWidth: 1078 / 3,
+                dHeight: 356 / 3
+            });
+            scene2Array.push({
+                img: document.getElementById("S2-2"),
+                visible: false,
+                dx: 220,
+                dy: 30,
+                dWidth: 1959 / 3,
+                dHeight: 1137 / 3
+            });
+            scene2Array.push({
+                img: document.getElementById("S2-3"),
+                visible: false,
+                dx: 980,
+                dy: 450,
+                dWidth: 1260 / 2.7,
+                dHeight: 753 / 2.7
+            });
+
+
+            //set canvas
+            var canvas = document.getElementById("canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            var context = canvas.getContext("2d");
+            var inputs = document.querySelectorAll('input[type="checkbox"]');
+
+            //set mouse
+            var mouseX = 0;
+            var mouseY = 0;
+            canvas.addEventListener('mousemove', getMouse);
+            function getMouse(mousePosition) {
+                mouseX = mousePosition.layerX;
+                mouseY = mousePosition.layerY;
+
+            }
+            //set change color
+
+            var color1 = (mouseX / canvas.height) * 255;
+            var color2 = (mouseY / canvas.width) * 255;
+
+
+            //set disc global value
+            var fov = 500;
+            var discPoint = [];
+            var discPoint3d = [];
+            var angleX = 0;
+            var angleY = 0;
+
+            var x3d = 0;
+            var y3d = 0;
+            var z3d = 0;
+            var firstx2d = 0;
+            var firsty2d = 0;
+            var firstScale = 0;
+            var lastScale = 0;
+            var lastx2d = 0;
+            var lasty2d = 0;
+
+            var elements = 300;
+            var dicX, dicY = 0;
+            var lastX, lastY = 0;
+            var firstX, firstY = 0;
+            var r1, r2 = 0;
+
+            var m = 0;
+            var n1 = 0;
+            var n2 = 0;
+            var n3 = 0;
+            var b = 1;
+            var a = 1;
+
+            var dim = 100;
+            var spacing = ((Math.PI * 2) / dim);
+            var numPoints = dim * dim;
+            var discSize = 10;
+            var discCounter = 100;
+
+            var dicmoveX = 0;
+            var dicmoveY = 0;
+
+
+
+            //set snowflakes global value
+            var downValue = [];
+            var xPlus = [];
+            var snowR = [];
+            for (let snow = 0; snow < 10; snow++) {
+                downValue[snow] = Math.floor(Math.random() * canvas.height * 0.7);
+                xPlus[snow] = Math.floor(Math.random() * canvas.width);
+                snowR[snow] = 75 + Math.floor(Math.random() * 100);
+            }
+
+
+            //set Scene Change
+            let flag = true;
+            function setVisibility() {
+                flag = !flag;
+                if (flag) {
+                    for (let i = 0; i < scene1Array.length; i++) {
+                        let obj = scene1Array[i];
+                        obj.visible = false;
+                        scene1Array[i] = obj;
+                    }
+                } else {
+                    for (let i = 0; i < scene2Array.length; i++) {
+                        let obj = scene2Array[i];
+                        obj.visible = false;
+                        scene2Array[i] = obj;
+                    }
+                }
+                clickCount = 0;
+            }
+
+
+
+            //set click event
+            var arcX = 1000;
+            var arcY = 20;
+            let clickCount = 0;
+            function onDocumentClick() {
+                //click event in scene one
+                console.log(clickCount);
+                if (flag) {
+                    clickCount++;
+                    console.log("1clickcount" + clickCount);
+
+                    // scene 1 conversation visible
+
+                    if (clickCount <= scene1Array.length) {
+                        let obj = scene1Array[clickCount - 1];
+                        obj.visible = true;
+                        scene1Array[clickCount - 1] = obj;
+                    }
+                }
+                //click event in scene two
+                if (!flag) {
+                    clickCount++;
+                    console.log("2clickcount" + clickCount);
+                    RunMaxi();
+
+                    if (clickCount <= scene2Array.length) {
+                        let obj = scene2Array[clickCount - 1];
+                        obj.visible = true;
+                        scene2Array[clickCount - 1] = obj;
+                    }
+
+                }
+            }
+
+
+            document.addEventListener("click", onDocumentClick);
+            //get mouse position in scene two
+            canvas.addEventListener('mousemove', getMousePos, false);
+            function getMousePos(mousemoveEvent) {
+                mouseX = mousemoveEvent.offsetX;
+                mouseY = mousemoveEvent.offsetY;
+                //console.log(mouseX + ','+ mouseY);
+            }
+
+            //first scene
+            function draw() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                //shake character
+                if (mouseX < canvas.width * 0.5) {
+                    context.drawImage(C1, canvas.width / 2 - 320, 200, 1242 / 3, 1521 / 3);
+                }
+                else if (canvas.width * 0.5 < mouseX && mouseX < canvas.width) {
+                    context.drawImage(C2, canvas.width / 2 - 320, 200, 1331 / 3, 1778 / 3);
+                }
+                //context.drawImage(img1, 0, 0);
+                //bubble setting
+
+
+
+
+                // Draw scene1 conversation image
+                for (let i = 0; i < scene1Array.length; i++) {
+                    let obj = scene1Array[i];
+                    if (obj.visible) {
+                        context.drawImage(obj.img, obj.dx, obj.dy, obj.dWidth, obj.dHeight);
+                    }
+                }
+
+
+
+
+                requestAnimationFrame(flag ? draw : draw2);
+            }
+            requestAnimationFrame(flag ? draw : draw2);
+
+
+            //second scene
+            function draw2() {
+                var ArcmouseX = 0;
+                var ArcmouseY = 0;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(S24, 730, -40, 1927 / 3, 951 / 3);
+                //draw disc
+                disc(570, -200);
+                disc(820, -200);
+                //snow flake background
+                context.fillStyle = "black";
+                context.fillRect(0, canvas.height * 0.3, canvas.width, canvas.height * 0.7);
+
+
+
+                //snowflakes fall down
+                context.beginPath();
+                for (let snow = 0; snow < 10; snow++) {
+                    downValue[snow] = ++downValue[snow];
+
+                    if (downValue[snow] === 600) {
+                        downValue[snow] = 0;
+                        xPlus[snow] = Math.floor(Math.random() * canvas.width);
+                    }
+                    snowFlake(downValue[snow], xPlus[snow], snowR[snow]);
+                }
+                context.stroke();
+                context.closePath();
+
+                //set music turn on or turn down
+                context.beginPath();
+                context.fillStyle = "#960018";
+                if (clickCount % 2 === 0) {
+                    if (mouseX < 400 && mouseY > 200) {
+                        ArcmouseX = 400;
+                        ArcmouseY = 200;
+                    }
+                    else if (mouseX < 400) {
+                        ArcmouseX = 400;
+                        ArcmouseY = mouseY;
+                    }
+                    else if (mouseY > 200) {
+                        ArcmouseX = mouseX;
+                        ArcmouseY = 200;
+                    }
+                    else {
+                        ArcmouseX = mouseX;
+                        ArcmouseY = mouseY;
+                    }
+
+                }
+                else {
+                    ArcmouseX = 1000;
+                    ArcmouseY = 20;
+                }
+
+                context.drawImage(DJhand, ArcmouseX, ArcmouseY, 611 / 3, 629 / 3);
+
+                context.fill();
+
+                //scene2Array draw
+                context.closePath();
+                for (let i = 0; i < scene2Array.length; i++) {
+                    let obj = scene2Array[i];
+                    if (obj.visible) {
+                        context.drawImage(obj.img, obj.dx, obj.dy, obj.dWidth, obj.dHeight);
+                    }
+                }
+
+                requestAnimationFrame(flag ? draw : draw2);
+            }
+            requestAnimationFrame(flag ? draw : draw2);
+
+            //disc part
+            function disc(dicmoveX, dicmoveY) {
+                var discMouseX1 = mouseX / 200;
+                var discMouseY1 = mouseY / 200;
+
+                m = Math.floor((mouseY / canvas.height) * 300);
+                n1 = (mouseX / canvas.width) * 100;
+
+                n2 = n3 = n1;
+
+                //find the point;
+                var discPoints = [];
+                for (var i = 0; i < dim; i++) {
+                    // i: for each ring 
+                    var z = Math.abs(discSize * Math.cos(spacing / 2 * i) * (dim / 8));
+                    var s = discSize * Math.sin(spacing / 1 * i);
+
+                    for (var j = 0; j < dim; j++) {
+                        // j: for each point on the ring
+                        r1 = discSize * Math.pow(Math.pow(Math.abs(Math.cos((m * spacing * j) / 1) / a), n2) + Math.pow(Math.abs(Math.sin((m * spacing * j) / 1)) / b, n3), -(1 / n1));
+                        var pointX = (r1 * Math.cos(spacing * j) * s);
+                        var pointY = r1 * Math.sin(spacing * j) * s;
+                        var discPoint = [pointX - 100, pointY, z];
+
+                        //add point
+                        discPoints.push(discPoint);
+                    }
+
+                }
+
+                // angleX = 581 * 0.2;
+                // angleY = 456 * 0.2 + 190;
+                angleX = 0;
+                angleY = 190;
+                //console.log('x:'+mouseX, 'y:'+mouseY);
+                //find each ring
+                for (let i = 0; i < numPoints; i += dim) {
+                    for (let j = 0; j < dim; j++) {
+                        discPoint3d = discPoints[Math.floor(i + j)];
+                        z3d = discPoint3d[2];
+                        if (z3d < -fov) z3d += 0;
+
+                        discPoint3d[2] = z3d;
+
+                        // Calculate the rotation
+
+                        rotateX(discPoint3d, angleX);
+                        rotateY(discPoint3d, angleY);
+
+                        // Get the point in position 
+
+                        x3d = discPoint3d[2];
+                        y3d = discPoint3d[0];
+                        z3d = discPoint3d[2];
+
+                        var discScale = (fov / (fov + z3d));
+                        var x2d = ((x3d * discScale) + canvas.width / 4) + dicmoveX;
+                        var y2d = ((y3d * discScale) + canvas.height / 2) + dicmoveY;
+
+                        if (j === 0) {
+                            firstx2d = x2d;
+                            firsty2d = y2d;
+                            firstScale = discScale;
+
+                            lastx2d = x2d;
+                            lasty2d = y2d;
+                            lastScale = discScale;
+                        }
+                        context.strokeStyle = `rgb(${color2}, ${color1}, 170)`;
+                        context.beginPath();
+                        context.moveTo(lastx2d + lastScale, lasty2d);
+                        context.lineTo(x2d + discScale, y2d);
+                        context.stroke();
+
+                        lastx2d = x2d;
+                        lasty2d = y2d;
+                        lastScale = discScale;
+
+                        if (j == dim - 1) {
+
+                            context.lineWidth = discScale;
+                            context.beginPath();
+                            context.moveTo(lastx2d + lastScale, lasty2d);
+                            context.lineTo(firstx2d + firstScale, firsty2d);
+                            context.stroke();
+                        }
+
+
+
+                    }
+                }
+            }
+
+            // setInterval(disc, 50);
+
+            function rotateX(discPoint3d, angleX) {
+                var x = discPoint3d[0];
+                var z = discPoint3d[2];
+
+                var cosRY = Math.cos(angleX);
+                var sinRY = Math.sin(angleX);
+
+                var tempz = z;
+                var tempx = x;
+
+                x = (tempx * cosRY) + (tempz * sinRY);
+                z = (tempx * -sinRY) + (tempz * cosRY);
+
+                discPoint3d[0] = x;
+                discPoint3d[2] = z;
+            }
+
+            function rotateY(discPoint3d, angleY) {
+                var y = discPoint3d[1];
+                var z = discPoint3d[2];
+
+                var cosRX = Math.cos(angleY);
+                var sinRX = Math.sin(angleY);
+
+                var tempz = z;
+                var tempy = y;
+
+                y = (tempy * cosRX) + (tempz * sinRX);
+                z = (tempy * -sinRX) + (tempz * cosRX);
+
+                discPoint3d[1] = y;
+                discPoint3d[2] = z;
+            }
+
+
+
+
+
+            //snow flakes part 
+            function snowFlake(downValue, xPlus, snowR) {
+                var segments = 200;
+                var spacing = Math.PI * 2 / segments;
+                var radius = snowR;
+                var counter = 100;
+                var d = 1;
+
+                var color1 = (mouseX / canvas.height) * 255;
+                var color2 = (mouseY / canvas.width) * 255;
+                var m = (mouseY / canvas.height) * 100;
+
+                //circles
+                context.beginPath();
+
+                for (var i = 0; i < segments; i++) {
+                    //TODO :change the color
+                    context.strokeStyle = `rgb(${color2}, ${color1}, 190)`;
+                    var x = (Math.sin(spacing * Math.PI * counter * i) * Math.sin(spacing * Math.PI * m * i)) * radius;
+                    var y = (Math.sin(spacing * Math.PI * m * i) * Math.cos(spacing * Math.PI * counter * i)) * radius;
+                    var snowX = (x + radius) + xPlus;
+                    var snowY = 200 + y + radius + downValue;
+                    context.lineTo(snowX, snowY);
+                    //console.log(snowX);
+                }
+                context.stroke();
+                context.closePath();
+
+
+
+
+                counter += 0.005 * d;
+
+                if (counter >= 100) {
+                    d = d * -1;
+                }
+
+                if (counter <= 50) {
+                    d = d * -1;
+                }
+
+            }
+
+
+        </script>
+
+        <script type="text/javascript">//script for sound
+            function RunMaxi() {
+                let maxi = maximilian();
+                let audio1 = new maxi.maxiAudio();
+                let myOsc = new maxi.maxiOsc();
+                let Fmelody = new maxi.maxiSample();
+                let drumbeat = new maxi.maxiSample();
+                let lowmelody1 = new maxi.maxiSample();
+                let Feffect1 = new maxi.maxiSample();
+                let myClock = new maxi.maxiClock();
+                let myDelay = new maxi.maxiDelayline();
+
+
+                audio1.init();
+
+                audio1.loadSample('Fmelody.wav', Fmelody);
+                audio1.loadSample('drumbeat.wav', drumbeat);
+                audio1.loadSample('lowmelody1.wav', lowmelody1);
+                audio1.loadSample('Feffect1.wav', Feffect1);
+
+                var tempo = 120;
+                var ticks = 3;
+                var delayTime = ((tempo / 60 * 44100) / 16) * 8;
+                var feedback = 0.8;
+                var counter = 0
+
+                myClock.setTempo(tempo);
+                myClock.setTicksPerBeat(ticks);
+
+                //mySample.trigger();
+
+                audio1.play = function () {
+
+                    myClock.ticker();
+
+                    if (myClock.tick && myClock.playHead % 23 == 0) {
+
+                        drumbeat.trigger();
+
+
+                    }
+
+                    if (myClock.tick && myClock.playHead % 4 == 3) {
+
+                        lowmelody1.trigger();
+                    }
+
+                    if (myClock.tick && myClock.playHead % 16 == 3) {
+
+                        Feffect1.trigger();
+                    }
+                    if (myClock.tick && myClock.playHead % 2600 == 0) {
+
+                        Fmelody2.trigger();
+                    }
+                    //play -0.5~2
+                    var DJpart1 = mouseX*(3-(-0.5)/1130);
+
+                    var out1 = Fmelody.play(1) * 0.6;
+                    var out2 = 0.2 * lowmelody1.play(myOsc.coswave(3));
+                    var out3 = Feffect1.play();
+                    var out4 = 0.2 * drumbeat.play();
+
+                    var out = out1 + out2 + out3 + myDelay.dl(out4, delayTime, feedback) + 0.8 * out4;
+
+
+                    return out;
+
+                };
+
+            }
+
+        </script>
+
+</body>
+
+</html>
